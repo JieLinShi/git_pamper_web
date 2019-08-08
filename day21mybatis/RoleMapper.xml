@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.train.day21mybatis.RoleMapper">
+
+    <!-- 配置查询到的列与实体类属性的映射 -->
+    <resultMap id="roleInfo" type="role">
+        <!-- id表示是主键 property 从类中来，意为属性，column从查询来，为查询的列名-->
+        <id property="id" column="id"></id>
+        <!--  result 其他属性映射-->
+        <result property="roleName" column="role_name"></result>
+        <result property="note" column="note"></result>
+    </resultMap>
+
+     <!-- resultMap结果映射可以自己配置属性与列的映射
+
+          resultType 结果根据列名与属性名称是否相同，进行映射，相同则映射，否则无法完成映射
+          resultType="com.train.day21mybatis.Role"
+          不能同时出现
+
+          解决名称不匹配获取不到数据问题：
+          1.别名
+          2.ResultMap
+     -->
+    <select id="findAllRole" resultMap="roleInfo">
+        select id,role_name, note from t_role
+    </select>
+
+    <!-- parameterType指定参数类型 -->
+    <select id="findRoleById" resultMap="roleInfo" parameterType="int">
+        select * from t_role where id=#{id}
+    </select>
+
+    <insert id="insertRole" parameterType="role">
+        insert into t_role values(null,#{roleName},#{note})
+    </insert>
+
+    <!-- 如果想做到修改哪些字段，则sql就拼接哪些字段，需要使用动态sql实现 -->
+    <update id="updateRole" parameterType="role">
+        update t_role set role_name=#{roleName},note=#{note} where id=#{id}
+    </update>
+
+    <delete id="deleteRoleById">
+        delete from t_role where id = #{id}
+    </delete>
+
+</mapper>
+
